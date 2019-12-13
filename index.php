@@ -1,12 +1,33 @@
 <?php
-
+	
+	class StException extends RuntimeException
+	{
+	}
 	/**
 	 * 
 	 */
 	class B 
 	{
-		function qwe(){
-
+	    protected $x;
+		function solve($a,$b,$c)
+		{
+			//aX+b=0
+			//x=-b/a
+			try 
+			{
+				if ($a==0) 
+				{
+					throw new StException("Equation does not exist", 1);
+				}
+				else
+				{
+				    $x=(-1*$b)/$a;
+				}
+			} catch (StException $e) {
+				$x=$e;
+			}
+			$this->x=$x;
+			return $x;
 		}
 	}
 
@@ -15,24 +36,50 @@
 	 */
 	class A extends B
 	{
-		public $a1;
-		public $a2;
-
-		function __construct($a,$b)
+		protected function discr($a,$b,$c)
 		{
-			$this->$a1=$a;
-			$this->$a2=$b;
-			parent::qwe();
+			//D=b^2-4ac
+			$discr=pow($b,2)-4*$a*$c;
+			try {
+				if ($discr<0) 
+				{
+					throw new StException("Discriminant less than zero", 1);
+				}
+			} catch (StException $e) {
+				$discr=$e;
+			}
+			return $discr;
 		}
-		function qwe($a){
-			
+
+		function solve($a,$b,$c)
+		{
+			//aX^2+bx+c=0
+			//x=-b+-sqrt($discr)/2a
+			$discr=$this->discr($a,$b,$c);
+			if (is_object($discr)==true){
+			    return $discr;
+			}
+			else if ($a==0) {
+			    //$a=0;
+				$x[]=parent::solve($b,$c,$a);
+			}
+			else if ($discr == 0) 
+			{
+				$x[]=($b*-1)/(2*$a);
+			}
+			else
+			{
+				$x[]=(($b*-1)+sqrt($discr))/(2*$a);
+				$x[]=(($b*-1)-sqrt($discr))/(2*$a);
+			}
+			$this->x=$x;
+			return $x;
 		}
 	}
+$a1=new A();
 
-	$b1=new B();
-	$b2=new B();
-	$b3=new B();
-
-	$a2=new A($b2,$b3);
-	$a1=new A($b1,$a2);
-?>
+print_r ($a1->solve(2,6,1));
+print_r ($a1->solve(0,6,2));
+print_r ($a1->solve(1,2,1));
+print_r ($a1->solve(6,1,6));
+print_r ($a1->solve(0,0,6));
