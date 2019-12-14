@@ -16,27 +16,28 @@ include_once('AV/MyLog.php');
 
 echo "Vvedite 3 parametra a, b, s \n";
 $paramens = explode(" ", fgets(STDIN));
-
+//����� ������ TRY CATCH
 try {
+	$file = fopen("version", "r");
+	MyLog::log("Выполняется с верисии: ".fgets($file));
+	echo "Version: ".fgets($file, 4096);
+	fclose($file);
+	
 	if (count($paramens) != 3) {
 		throw new Exception("Vi vveli 3 chisla \n");
 	}
 	$a = (float)$paramens[0];
 	$b = (float)$paramens[1];
 	$c = (float)$paramens[2]; 
-	
- 	{
 		MyLog::log("Kvadratnoe uravnenie: ".$a."x^2 + ".$b."x + ".$c." = 0");
 		$square = new Square();
 		if (is_array($temp = $square->solve($a, $b, $c))) {
 			MyLog::log("Otvet : ". implode(" , ", $temp));
-		 }
-	else {
+		} else { 
 			MyLog::log("Otvet: ".$temp);
 		 }
 		
 	}	
-}
 catch (Exception $e){
 	MyLog::log($e->GetMessage());
 }
