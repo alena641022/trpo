@@ -18,7 +18,7 @@ class MyLog extends \core\LogAbstract implements \core\LogInterface {
 		echo implode("\n", $this->log);
 		} else 
 		{
-			die("Ошибка создания файла")
+			die("Ошибка создания файла");
 		}
 	}
 	
